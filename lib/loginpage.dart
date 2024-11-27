@@ -1,3 +1,6 @@
+import 'package:appwriteauthentication/AppwriteServices/appwriteservices.dart';
+import 'package:appwriteauthentication/homepage.dart';
+import 'package:appwriteauthentication/signup.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -8,8 +11,25 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _username = TextEditingController();
+  TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+  late Appwriteservices _appwriteservices;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _appwriteservices = Appwriteservices();
+  }
+
+  Future<void> loginUser() async {
+    try {
+      await _appwriteservices.loginUser(_email.text, _password.text);
+      
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,27 +42,36 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 200,
             ),
-              Text("L O G I N",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
-            SizedBox(height: 50,),
+            Text(
+              "L O G I N",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.purple.shade800),
+            ),
+            SizedBox(
+              height: 50,
+            ),
             Container(
-              height: 65,
+              height: 63,
               width: double.infinity,
               padding: EdgeInsets.only(left: 5, right: 5),
               decoration: BoxDecoration(
-                  border: Border.all(),
+                  border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(15)),
               child: Row(
                 children: [
                   Icon(
                     Icons.person,
-                    size: 30,
+                    size: 27,
+                    color: Colors.purple.shade900,
                   ),
                   SizedBox(
                     width: 8,
                   ),
                   Expanded(
                       child: TextField(
-                        controller: _username,
+                    controller: _email,
                     decoration: InputDecoration(
                         border: InputBorder.none, hintText: "USERNAME..."),
                   ))
@@ -53,24 +82,25 @@ class _LoginPageState extends State<LoginPage> {
               height: 50,
             ),
             Container(
-              height: 65,
+              height: 63,
               width: double.infinity,
               padding: EdgeInsets.only(left: 5, right: 5),
               decoration: BoxDecoration(
-                  border: Border.all(),
+                  border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(15)),
               child: Row(
                 children: [
                   Icon(
                     Icons.remove_red_eye,
-                    size: 30,
+                    size: 27,
+                    color: Colors.purple.shade900,
                   ),
                   SizedBox(
                     width: 8,
                   ),
                   Expanded(
                       child: TextField(
-                        controller: _password,
+                    controller: _password,
                     decoration: InputDecoration(
                         border: InputBorder.none, hintText: "PASSWORD..."),
                   ))
@@ -78,34 +108,58 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 60,
             ),
             Container(
               alignment: Alignment.centerRight,
               padding: EdgeInsets.only(left: 10, right: 10),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.only(top: 15, bottom: 15,left: 30,right: 30),
-                      shape: BeveledRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      )),
-                  onPressed: () {},
-                  child: Text(
-                    "SIGNIN",
-                    style: TextStyle(
-                        letterSpacing: 1,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17),
-                  )),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(15),
+                    gradient: LinearGradient(colors: [
+                      Colors.purple.shade600,
+                      Colors.purpleAccent.shade400
+                    ])),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.only(
+                            top: 13, bottom: 13, left: 30, right: 30),
+                        shape: BeveledRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        )),
+                    onPressed: () {
+                      loginUser();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(),));
+                    },
+                    child: Text(
+                      "SIGNIN",
+                      style: TextStyle(
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 17),
+                    )),
+              ),
             ),
-
-            SizedBox(height: 170,),
-            Row(mainAxisAlignment: MainAxisAlignment.center,
+            SizedBox(height: 165),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Do have any account?"),
-                MaterialButton(onPressed: () {
-                  
-                },child: Text("SIGNUP",style: TextStyle(color: Colors.purple[900]),),)
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SignUp(),
+                    ));
+                  },
+                  child: Text(
+                    "SIGNUP",
+                    style: TextStyle(color: Colors.purple[900]),
+                  ),
+                )
               ],
             )
           ],
